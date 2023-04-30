@@ -7,6 +7,7 @@ import { BeersService } from './beers.service';
 import { BeersController } from './beers.controller';
 import BeerSchema, { Beer } from './schemas/beer.schema';
 import { SpotifyService } from './spotify.service';
+import { BeersUtils } from './beers.utils';
 
 @Module({
   imports: [
@@ -16,6 +17,6 @@ import { SpotifyService } from './spotify.service';
     ScheduleModule.forRoot(),
   ],
   controllers: [BeersController],
-  providers: [BeersService, SpotifyService],
+  providers: [BeersService, SpotifyService, BeersUtils],
 })
 export class BeersModule {}
