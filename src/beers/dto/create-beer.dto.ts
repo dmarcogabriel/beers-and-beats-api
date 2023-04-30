@@ -1,7 +1,3 @@
-export class CreateBeerDto {
-  readonly style: string;
-  readonly idealTemperature: {
-    max: number;
-    min: number;
-  };
-}
+import { BeerDto } from './beer.dto';
+
+export class CreateBeerDto extends BeerDto {}
