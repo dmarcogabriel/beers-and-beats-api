@@ -1,13 +1,15 @@
-interface ITrack {
+export interface ITrackResponse {
   name: string;
   artist: string;
   link: string;
 }
 
+export interface IPlaylistResponse {
+  name: string;
+  tracks: ITrackResponse[];
+}
+
 export interface IFindByTemperatureResponse {
   beerStyle: string;
-  playlist: {
-    name: string;
-    tracks: ITrack[];
-  };
+  playlist?: IPlaylistResponse;
 }

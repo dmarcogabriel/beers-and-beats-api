@@ -4,7 +4,7 @@ export interface IPostAuthResponseData {
   expires_in: number;
 }
 
-interface IPlaylist {
+export interface IPlaylist {
   collaborative: boolean;
   description: string;
   href: string;
