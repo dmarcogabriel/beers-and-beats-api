@@ -38,4 +38,7 @@ $ yarn test:cov
 ```
 
 ## Documentation
-After running the API, you can find it [HERE](http://localhost:3000/api).
+You can find the API and endpoints documentation [HERE](https://beers-and-beats-api.up.railway.app/api).
+
+## Deploy
+This API deploy is automated using [Railway](https://railway.app) so, when some branch is merged in `main` branch, it re deploy the application.
