@@ -5,12 +5,14 @@ import { CreateBeerDto } from './dto/create-beer.dto';
 import { UpdateBeerDto } from './dto/update-beer.dto';
 import { IFindByTemperatureResponse } from './interfaces/beersService.interface';
 import { SpotifyService } from './spotify.service';
+import { BeersUtils } from './beers.utils';
 
 @Injectable()
 export class BeersService {
   constructor(
     @InjectModel('Beer') private readonly beerModel: BeerModel,
     private readonly spotifyService: SpotifyService,
+    private readonly beersUtils: BeersUtils,
   ) {}
 
   create(createBeerDto: CreateBeerDto) {
@@ -45,16 +47,7 @@ export class BeersService {
     temperature: number,
   ): Promise<IFindByTemperatureResponse> {
     const beerList = await this.beerModel.findByTemperature(temperature);
-
-    const [firstBeer] = beerList.sort((beerA, beerB) => {
-      if (beerA.style.toLowerCase() < beerB.style.toLowerCase()) {
-        return -1;
-      }
-      if (beerA.style.toLowerCase() > beerB.style.toLowerCase()) {
-        return 1;
-      }
-      return 0;
-    });
+    const firstBeer = this.beersUtils.getAlphaFirstBeer(beerList);
 
     try {
       const playlist = await this.spotifyService.getPlaylist(firstBeer.style);
