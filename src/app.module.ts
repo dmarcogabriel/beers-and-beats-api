@@ -10,13 +10,11 @@ import { BeersModule } from './beers/beers.module';
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => {
-        const dbPassword = configService.get<string>('DATABASE_PASSWORD');
-        const dbName = configService.get<string>('DATABASE_NAME');
+        const mongoDbUri = configService.get<string>('MONGODB_URI');
 
-        if (dbPassword && dbName) {
-          const password = encodeURIComponent(dbPassword);
+        if (mongoDbUri) {
           return {
-            uri: `mongodb+srv://gabriel:${password}@cluster0.bkb6b.mongodb.net/${dbName}?retryWrites=true&w=majority`,
+            uri: mongoDbUri,
           };
         }
       },
