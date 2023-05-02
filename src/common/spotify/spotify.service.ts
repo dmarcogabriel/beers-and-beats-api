@@ -1,7 +1,8 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { Cron } from '@nestjs/schedule';
+import { Injectable, Inject } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 import {
   IPlaylist,
   IPostAuthResponseData,
@@ -11,19 +12,18 @@ import {
 
 @Injectable()
 export class SpotifyService {
-  private spotifyAuthToken: string;
-  private readonly logger = new Logger(SpotifyService.name);
+  private readonly SPOTIFY_TOKEN_KEY = '@spotify-token';
 
   constructor(
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
   ) {}
 
-  @Cron('*/50 * * * *')
-  async handleAuthOnSpotify() {
+  async logInSpotify() {
     const url = this.configService.get<string>('SPOTIFY_AUTH_URL');
-    this.httpService
-      .post<IPostAuthResponseData>(
+    const { data } =
+      await this.httpService.axiosRef.post<IPostAuthResponseData>(
         `${url}/api/token`,
         {
           grant_type: 'client_credentials',
@@ -37,19 +37,23 @@ export class SpotifyService {
             'Content-Type': 'application/x-www-form-urlencoded',
           },
         },
-      )
-      .subscribe(({ data }) => {
-        this.logger.log('Spotify token updated!');
-        this.spotifyAuthToken = `${data.token_type} ${data.access_token}`;
-      });
+      );
+    await this.cacheManager.set(
+      this.SPOTIFY_TOKEN_KEY,
+      `${data.token_type} ${data.access_token}`,
+      0,
+    );
   }
 
   async getPlaylistTracks(tracksUrl: string) {
+    const spotifyAuthToken = await this.cacheManager.get<string>(
+      this.SPOTIFY_TOKEN_KEY,
+    );
     const { data } =
       await this.httpService.axiosRef.get<IGetPlaylistTracksResponseData>(
         tracksUrl,
         {
-          headers: { Authorization: this.spotifyAuthToken },
+          headers: { Authorization: spotifyAuthToken },
         },
       );
 
@@ -61,6 +65,9 @@ export class SpotifyService {
   }
 
   async getPlaylist(beerStyle: string): Promise<IPlaylist> {
+    const spotifyAuthToken = await this.cacheManager.get<string>(
+      this.SPOTIFY_TOKEN_KEY,
+    );
     const url = this.configService.get<string>('SPOTIFY_BASE_URL');
 
     const { data } =
@@ -72,7 +79,7 @@ export class SpotifyService {
             type: 'playlist',
             limit: 1,
           },
-          headers: { Authorization: this.spotifyAuthToken },
+          headers: { Authorization: spotifyAuthToken },
         },
       );
     const [firstPlaylist] = data.playlists.items;

@@ -5,6 +5,10 @@ import { MongoMemoryServer } from 'mongodb-memory-server';
 import { BeersService } from '../beers.service';
 import BeerSchema, { Beer, BeerModel } from '../schemas/beer.schema';
 import { BeerDtoStub, BeerListDtoStub } from './beer.dto.stub';
+import { SpotifyService } from '../../common/spotify/spotify.service';
+import { BeersUtils } from '../beers.utils';
+
+jest.mock('../spotify.service');
 
 describe('BeersService', () => {
   let service: BeersService;
@@ -29,6 +33,8 @@ describe('BeersService', () => {
           provide: getModelToken(Beer.name),
           useValue: mockBeerModel,
         },
+        SpotifyService,
+        BeersUtils,
       ],
     }).compile();
 
@@ -129,7 +135,7 @@ describe('BeersService', () => {
 
       const foundedBeer = await service.findByTemperature(-2);
       if (foundedBeer) {
-        expect(foundedBeer.style).toBe('Dunkel');
+        expect(foundedBeer.beerStyle).toBe('Dunkel');
       }
     });
 
@@ -139,7 +145,7 @@ describe('BeersService', () => {
 
       const foundedBeer = await service.findByTemperature(1.5);
       if (foundedBeer) {
-        expect(foundedBeer.style).toBe('Imperial Stouts');
+        expect(foundedBeer.beerStyle).toBe('Imperial Stouts');
       }
     });
 
@@ -148,7 +154,7 @@ describe('BeersService', () => {
 
       const foundedBeer = await service.findByTemperature(20);
       if (foundedBeer) {
-        expect(foundedBeer.style).toBe('Brown ale');
+        expect(foundedBeer.beerStyle).toBe('Brown ale');
       }
     });
 
@@ -157,7 +163,7 @@ describe('BeersService', () => {
 
       const foundedBeer = await service.findByTemperature(-20);
       if (foundedBeer) {
-        expect(foundedBeer.style).toBe('Dunkel');
+        expect(foundedBeer.beerStyle).toBe('Dunkel');
       }
     });
   });
