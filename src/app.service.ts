@@ -13,7 +13,7 @@ export class AppService implements OnApplicationBootstrap {
     this.logger.log('Spotify token created!');
   }
 
-  @Cron('* 55 * * * *')
+  @Cron('0 */55 * * * *')
   async handleSpotifyToken() {
     await this.spotifyService.logInSpotify();
     this.logger.log('Spotify token updated!');
