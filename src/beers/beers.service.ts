@@ -4,7 +4,7 @@ import { BeerModel } from '../beers/schemas/beer.schema';
 import { CreateBeerDto } from './dto/create-beer.dto';
 import { UpdateBeerDto } from './dto/update-beer.dto';
 import { IFindByTemperatureResponse } from './interfaces/beersService.interface';
-import { SpotifyService } from './spotify.service';
+import { SpotifyService } from '../common/spotify/spotify.service';
 import { BeersUtils } from './beers.utils';
 
 @Injectable()

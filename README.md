@@ -1,4 +1,4 @@
-# Beers and Beats API
+# :beer: Beers and Beats API
 
 ## Description
 
