@@ -9,7 +9,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('Beers and Beats example')
     .setDescription(
-      "This API contains a CRUD for beers and a find by temperature endpoint, it doesn't need authentication to use it.",
+      "This API contains a CRUD for beers and a find by temperature endpoint, it doesn't need authentication to use it, when the api starts it get an auth token from spotify, and there is a cron job to re authenticate before the token expires.",
     )
     .setVersion('1.0')
     .addTag('beers')
