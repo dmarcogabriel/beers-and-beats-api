@@ -77,7 +77,7 @@ export class BeersController {
         Nest.HttpStatus.BAD_REQUEST,
       );
 
-    this.beersService.remove(id);
+    return this.beersService.remove(id);
   }
 
   @Nest.Post('find-by-temperature')
@@ -97,6 +97,7 @@ export class BeersController {
         'request body is missing "temperature"',
         Nest.HttpStatus.BAD_REQUEST,
       );
+    console.log(await this.beersService.findByTemperature(temperature));
     const beerByTemperature = await this.beersService.findByTemperature(
       temperature,
     );

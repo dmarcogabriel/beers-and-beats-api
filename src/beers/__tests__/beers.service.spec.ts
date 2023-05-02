@@ -8,7 +8,7 @@ import { BeerDtoStub, BeerListDtoStub } from './beer.dto.stub';
 import { SpotifyService } from '../../common/spotify/spotify.service';
 import { BeersUtils } from '../beers.utils';
 
-jest.mock('../spotify.service');
+jest.mock('../../common/spotify/spotify.service');
 
 describe('BeersService', () => {
   let service: BeersService;
